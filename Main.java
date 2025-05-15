@@ -2,9 +2,11 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import attacks.BruteForceAttack;
-import attacks.DdosAttack;
 import attacks.SQLInjectionTest;
 import defense.PreventionTechniques;
+import defense.Firewall;
+import attacks.IPBlocklistAttack;
+import defense.RateLimiter;
 
 public class Main {
     
@@ -126,17 +128,18 @@ public class Main {
         System.out.println(WHITE_BOLD + 
         "\n==================== Main Menu ====================\n" +
         "    [1] Launch Brute Force Attack \n" +
-        "    [2] Simulate DDoS Attack \n" + 
-        "    [3] Perform SQL Injection Test\n" +
-        "    [4] View Attack Logs\n" + 
-        "    [5] Learn Prevention techniques\n" + 
-        "    [6] Exit\n" +
+        "    [2] Perform SQL Injection Test\n" +
+        "    [3] Learn Prevention techniques\n" + 
+        "    [4] Configure Firewall\n" +
+        "    [5] Exit\n" +
+        "    [6] Simulate IP Blocklist Attack\n" +
+        "    [7] Configure Rate Limiter\n" +
         WHITE_BOLD + "===============================================================\n" + RESET);
     }
      
     public static void handleMainMenuSelection(){
         Scanner sc = new Scanner(System.in);
-        System.out.print(CYAN + "Enter your choice (1-6): " + RESET);
+        System.out.print(CYAN + "Enter your choice (1-7): " + RESET);
         int choice = sc.nextInt();
         sc.nextLine(); // consume newline
 
@@ -157,28 +160,162 @@ public class Main {
               System.out.println(YELLOW + witty[rand.nextInt(witty.length)] + RESET);
               break;
             case 2:
-              loadingAnimation("Simulating DDoS Attack");
-              DdosAttack.attack();
-              System.out.println(YELLOW + witty[rand.nextInt(witty.length)] + RESET);
-              break;
-            case 3:
               loadingAnimation("Performing SQL Injection Test");
               SQLInjectionTest.attack();
               System.out.println(YELLOW + witty[rand.nextInt(witty.length)] + RESET);
               break;
-            case 5:
+            case 3:
               loadingAnimation("Loading Prevention Techniques");
               PreventionTechniques.display();
               System.out.println(YELLOW + witty[rand.nextInt(witty.length)] + RESET);
               break;
-            case 6:
+            case 4:
+              loadingAnimation("Configuring Firewall");
+              configureFirewall();
+              System.out.println(YELLOW + witty[rand.nextInt(witty.length)] + RESET);
+              break;
+            case 5:
               loadingAnimation("Shutting down");
               System.out.println(RED + "Exiting.. Stay safe hacker!!" + RESET);
+              break;
+            case 6:
+              loadingAnimation("Simulating IP Blocklist Attack");
+              System.out.print(CYAN + "Enter first input (sorted or random) for IP generation: " + RESET);
+              String ipChoice1 = sc.nextLine().trim().toLowerCase();
+              IPBlocklistAttack.main(new String[]{ipChoice1});
+              System.out.print(CYAN + "Enter second input (sorted or random) for IP generation: " + RESET);
+              String ipChoice2 = sc.nextLine().trim().toLowerCase();
+              IPBlocklistAttack.main(new String[]{ipChoice2});
+              System.out.println(YELLOW + witty[rand.nextInt(witty.length)] + RESET);
+              break;
+            case 7:
+              loadingAnimation("Configuring Rate Limiter");
+              configureRateLimiter();
+              System.out.println(YELLOW + witty[rand.nextInt(witty.length)] + RESET);
               break;
             default:
               System.out.println(RED + "Invalid selection. Please choose a valid option." + RESET);
         }
     }
 
-}
+    public static void configureFirewall() {
+        Firewall firewall = new Firewall();
+        Scanner sc = new Scanner(System.in);
+        
+        while(true) {
+            System.out.println(WHITE_BOLD + "\n==================== Firewall Configuration ====================\n" +
+                "    [1] Enable Firewall\n" +
+                "    [2] Disable Firewall\n" +
+                "    [3] Add Allowed IP\n" +
+                "    [4] Add Blocked IP\n" +
+                "    [5] Display Firewall Status\n" +
+                "    [6] Test Connection\n" +
+                "    [7] Return to Main Menu\n" +
+                "===============================================================\n" + RESET);
+            
+            System.out.print(CYAN + "Enter your choice (1-7): " + RESET);
+            int choice = sc.nextInt();
+            sc.nextLine(); // consume newline
+            
+            switch(choice) {
+                case 1:
+                    firewall.enable();
+                    System.out.println(GREEN + "Firewall enabled successfully!" + RESET);
+                    break;
+                case 2:
+                    firewall.disable();
+                    System.out.println(RED + "Firewall disabled successfully!" + RESET);
+                    break;
+                case 3:
+                    System.out.print(CYAN + "Enter IP to allow: " + RESET);
+                    String allowedIP = sc.nextLine();
+                    firewall.addAllowedIP(allowedIP);
+                    System.out.println(GREEN + "IP " + allowedIP + " added to allowed list!" + RESET);
+                    break;
+                case 4:
+                    System.out.print(CYAN + "Enter IP to block: " + RESET);
+                    String blockedIP = sc.nextLine();
+                    firewall.addBlockedIP(blockedIP);
+                    System.out.println(RED + "IP " + blockedIP + " added to blocked list!" + RESET);
+                    break;
+                case 5:
+                    System.out.println(GREEN + "Firewall Status: " + (firewall.isEnabled() ? "Enabled" : "Disabled") + RESET);
+                    System.out.println("Allowed IPs: " + Arrays.toString(firewall.getAllowedIPs()));
+                    System.out.println("Blocked IPs: " + Arrays.toString(firewall.getBlockedIPs()));
+                    break;
+                case 6:
+                    System.out.print(CYAN + "Enter IP to test connection: " + RESET);
+                    String testIP = sc.nextLine();
+                    if (firewall.isIPAllowed(testIP)) {
+                        System.out.println(GREEN + "Connection allowed for IP: " + testIP + RESET);
+                    } else if (firewall.isIPBlocked(testIP)) {
+                        System.out.println(RED + "Connection blocked for IP: " + testIP + RESET);
+                    } else {
+                        System.out.println(YELLOW + "No specific rules for IP: " + testIP + ". Connection allowed." + RESET);
+                    }
+                    break;
+                case 7:
+                    System.out.println(GREEN + "Returning to Main Menu..." + RESET);
+                    return;
+                default:
+                    System.out.println(RED + "Invalid selection. Please choose a valid option." + RESET);
+            }
+            
+            System.out.println("\nPress Enter to continue...");
+            sc.nextLine();
+        }
+    }
 
+    public static void configureRateLimiter() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print(CYAN + "Enter max requests per time window: " + RESET);
+        int maxRequests = sc.nextInt();
+        System.out.print(CYAN + "Enter time window (in seconds): " + RESET);
+        long timeWindow = sc.nextLong();
+        sc.nextLine(); // consume newline
+        RateLimiter rateLimiter = new RateLimiter(maxRequests, timeWindow, TimeUnit.SECONDS);
+        String clientId = "testClient";
+        while(true) {
+            System.out.println(WHITE_BOLD + "\n==================== Rate Limiter Configuration ====================\n" +
+                "    [1] Display Current Rate Limiter Settings\n" +
+                "    [2] Test Rate Limiting\n" +
+                "    [3] Reset Rate Limiter for Client\n" +
+                "    [4] Return to Main Menu\n" +
+                "===============================================================\n" + RESET);
+            System.out.print(CYAN + "Enter your choice (1-4): " + RESET);
+            int choice = sc.nextInt();
+            sc.nextLine(); // consume newline
+            switch(choice) {
+                case 1:
+                    int remaining = rateLimiter.getRemainingRequests(clientId);
+                    long untilReset = rateLimiter.getTimeUntilReset(clientId) / 1000;
+                    System.out.println(GREEN + "Max Requests: " + maxRequests + ", Time Window: " + timeWindow + " seconds" + RESET);
+                    System.out.println(GREEN + "Remaining Requests for '" + clientId + "': " + remaining + RESET);
+                    System.out.println(GREEN + "Time until reset: " + untilReset + " seconds" + RESET);
+                    break;
+                case 2:
+                    System.out.print(CYAN + "Enter number of requests to simulate: " + RESET);
+                    int requests = sc.nextInt();
+                    for (int i = 0; i < requests; i++) {
+                        if (rateLimiter.allowRequest(clientId)) {
+                            System.out.println(GREEN + "Request " + (i+1) + " allowed" + RESET);
+                        } else {
+                            System.out.println(RED + "Request " + (i+1) + " blocked (rate limit exceeded)" + RESET);
+                        }
+                    }
+                    break;
+                case 3:
+                    rateLimiter.resetLimit(clientId);
+                    System.out.println(GREEN + "Rate limiter reset for client '" + clientId + "'!" + RESET);
+                    break;
+                case 4:
+                    System.out.println(GREEN + "Returning to Main Menu..." + RESET);
+                    return;
+                default:
+                    System.out.println(RED + "Invalid selection. Please choose a valid option." + RESET);
+            }
+            System.out.println("\nPress Enter to continue...");
+            sc.nextLine();
+        }
+    }
+}
