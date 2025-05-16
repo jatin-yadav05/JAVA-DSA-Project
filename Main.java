@@ -7,6 +7,7 @@ import defense.PreventionTechniques;
 import defense.Firewall;
 import attacks.IPBlocklistAttack;
 import defense.RateLimiter;
+import attacks.ManInTheMiddleAttack;
 
 public class Main {
     
@@ -134,12 +135,13 @@ public class Main {
         "    [5] Exit\n" +
         "    [6] Simulate IP Blocklist Attack\n" +
         "    [7] Configure Rate Limiter\n" +
+        "    [8] Simulate Man-in-the-Middle Attack\n" +
         WHITE_BOLD + "===============================================================\n" + RESET);
     }
      
     public static void handleMainMenuSelection(){
         Scanner sc = new Scanner(System.in);
-        System.out.print(CYAN + "Enter your choice (1-7): " + RESET);
+        System.out.print(CYAN + "Enter your choice (1-8): " + RESET);
         int choice = sc.nextInt();
         sc.nextLine(); // consume newline
 
@@ -191,6 +193,11 @@ public class Main {
             case 7:
               loadingAnimation("Configuring Rate Limiter");
               configureRateLimiter();
+              System.out.println(YELLOW + witty[rand.nextInt(witty.length)] + RESET);
+              break;
+            case 8:
+              loadingAnimation("Launching Man-in-the-Middle Attack");
+              ManInTheMiddleAttack.attack();
               System.out.println(YELLOW + witty[rand.nextInt(witty.length)] + RESET);
               break;
             default:
