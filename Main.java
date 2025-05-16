@@ -5,7 +5,7 @@ import attacks.BruteForceAttack;
 import attacks.SQLInjectionTest;
 import defense.PreventionTechniques;
 import defense.Firewall;
-import attacks.IPBlocklistAttack;
+import attacks.DdosAttack;
 import defense.RateLimiter;
 import attacks.ManInTheMiddleAttack;
 
@@ -133,7 +133,7 @@ public class Main {
         "    [3] Learn Prevention techniques\n" + 
         "    [4] Configure Firewall\n" +
         "    [5] Exit\n" +
-        "    [6] Simulate IP Blocklist Attack\n" +
+        "    [6] Simulate DDOS Attack\n" +
         "    [7] Configure Rate Limiter\n" +
         "    [8] Simulate Man-in-the-Middle Attack\n" +
         WHITE_BOLD + "===============================================================\n" + RESET);
@@ -181,13 +181,13 @@ public class Main {
               System.out.println(RED + "Exiting.. Stay safe hacker!!" + RESET);
               break;
             case 6:
-              loadingAnimation("Simulating IP Blocklist Attack");
+              loadingAnimation("Simulating DDOS Attack");
               System.out.print(CYAN + "Enter first input (sorted or random) for IP generation: " + RESET);
               String ipChoice1 = sc.nextLine().trim().toLowerCase();
-              IPBlocklistAttack.main(new String[]{ipChoice1});
+              DdosAttack.main(new String[]{ipChoice1});
               System.out.print(CYAN + "Enter second input (sorted or random) for IP generation: " + RESET);
               String ipChoice2 = sc.nextLine().trim().toLowerCase();
-              IPBlocklistAttack.main(new String[]{ipChoice2});
+              DdosAttack.main(new String[]{ipChoice2});
               System.out.println(YELLOW + witty[rand.nextInt(witty.length)] + RESET);
               break;
             case 7:

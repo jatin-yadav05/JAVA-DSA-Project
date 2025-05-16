@@ -52,7 +52,7 @@ class IPBlocklistTree {
     }
 }
 
-public class IPBlocklistAttack {
+public class DdosAttack {
     // Generate random IP
     static String randomIP(Random rand) {
         return rand.nextInt(256) + "." + rand.nextInt(256) + "." + rand.nextInt(256) + "." + rand.nextInt(256);
